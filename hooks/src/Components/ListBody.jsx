@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useRef } from 'react';
 
 const initialState = {
   items: [],
@@ -34,8 +34,9 @@ const reducer = (state, action) => {
   }
 };
 
-export default function ListBody() {
+const ListBody = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const inputRef = useRef(); // Use useRef to create a ref
 
   const toggleContent = (index) => {
     dispatch({ type: 'TOGGLE_CONTENT', payload: index });
@@ -52,6 +53,10 @@ export default function ListBody() {
     }
   };
 
+  const goUp = () => {
+    inputRef.current.focus(); // Corrected the ref name
+  };
+
   return (
     <div>
       <input
@@ -59,6 +64,7 @@ export default function ListBody() {
         value={state.currentInput}
         onChange={(e) => storeInput(e)}
         onKeyDown={(e) => storeInput(e)}
+        ref={inputRef} // Use the correct ref
       />
       {state.showBox ? (
         state.items.map((item, index) => (
@@ -79,7 +85,9 @@ export default function ListBody() {
       ) : (
         ''
       )}
+      <button onClick={goUp}>Go up</button>
     </div>
   );
-}
+};
 
+export default ListBody;
